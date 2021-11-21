@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WorkflowBuilder Version="2.6.2"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:al="clr-namespace:Bonsai.Audio;assembly=Bonsai.Audio"
+                 xmlns:res="clr-namespace:Bonsai.Resources;assembly=Bonsai.System"
+                 xmlns:wie="clr-namespace:Bonsai.Windows.Input;assembly=Bonsai.Windows.Input"
+                 xmlns:rx="clr-namespace:Bonsai.Reactive;assembly=Bonsai.Core"
+                 xmlns="https://bonsai-rx.org/2018/workflow">
+  <Workflow>
+    <Nodes>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="al:CreateAudioContext">
+          <al:DeviceName>Generic Software on Headphones (bc=nch Stereo)</al:DeviceName>
+          <al:SampleRate>0</al:SampleRate>
+          <al:Refresh>0</al:Refresh>
+          <al:Position>
+            <al:X>0</al:X>
+            <al:Y>0</al:Y>
+            <al:Z>0</al:Z>
+          </al:Position>
+          <al:Velocity>
+            <al:X>0</al:X>
+            <al:Y>0</al:Y>
+            <al:Z>0</al:Z>
+          </al:Velocity>
+          <al:Direction>
+            <al:X>-0</al:X>
+            <al:Y>-0</al:Y>
+            <al:Z>-1</al:Z>
+          </al:Direction>
+          <al:Up>
+            <al:X>0</al:X>
+            <al:Y>1</al:Y>
+            <al:Z>0</al:Z>
+          </al:Up>
+          <al:Gain>1</al:Gain>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="al:AudioResources">
+          <al:Buffers>
+            <al:BufferConfiguration xsi:type="al:SoundBuffer">
+              <al:Name>B</al:Name>
+              <al:FileName>file_example_WAV_1MG (1).wav</al:FileName>
+            </al:BufferConfiguration>
+            <al:BufferConfiguration xsi:type="al:SoundBuffer">
+              <al:Name>G</al:Name>
+              <al:FileName>file_example_WAV_1MG (1).wav</al:FileName>
+            </al:BufferConfiguration>
+          </al:Buffers>
+          <al:Sources />
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="res:LoadResources" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="wie:KeyDown">
+          <wie:Filter>A</wie:Filter>
+          <wie:SuppressRepetitions>false</wie:SuppressRepetitions>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="CreateObservable">
+        <Workflow>
+          <Nodes>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="BufferName" />
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="al:CreateSource">
+                <al:BufferName>B</al:BufferName>
+                <al:Direction>
+                  <al:X>0</al:X>
+                  <al:Y>0</al:Y>
+                  <al:Z>0</al:Z>
+                </al:Direction>
+                <al:Position>
+                  <al:X>0</al:X>
+                  <al:Y>0</al:Y>
+                  <al:Z>0</al:Z>
+                </al:Position>
+                <al:Velocity>
+                  <al:X>0</al:X>
+                  <al:Y>0</al:Y>
+                  <al:Z>0</al:Z>
+                </al:Velocity>
+                <al:Looping>false</al:Looping>
+                <al:Relative>false</al:Relative>
+                <al:State>Playing</al:State>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="ResourceSubject">
+              <Name>trash</Name>
+            </Expression>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="DueTime" />
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:Timer">
+                <rx:DueTime>PT4S</rx:DueTime>
+                <rx:Period>PT0S</rx:Period>
+              </Combinator>
+            </Expression>
+          </Nodes>
+          <Edges>
+            <Edge From="0" To="1" Label="Source1" />
+            <Edge From="1" To="2" Label="Source1" />
+            <Edge From="3" To="4" Label="Source1" />
+          </Edges>
+        </Workflow>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="wie:KeyDown">
+          <wie:Filter>S</wie:Filter>
+          <wie:SuppressRepetitions>false</wie:SuppressRepetitions>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="CreateObservable">
+        <Workflow>
+          <Nodes>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="BufferName" />
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="al:CreateSource">
+                <al:BufferName>G</al:BufferName>
+                <al:Direction>
+                  <al:X>0</al:X>
+                  <al:Y>0</al:Y>
+                  <al:Z>0</al:Z>
+                </al:Direction>
+                <al:Position>
+                  <al:X>0</al:X>
+                  <al:Y>0</al:Y>
+                  <al:Z>0</al:Z>
+                </al:Position>
+                <al:Velocity>
+                  <al:X>0</al:X>
+                  <al:Y>0</al:Y>
+                  <al:Z>0</al:Z>
+                </al:Velocity>
+                <al:Looping>false</al:Looping>
+                <al:Relative>false</al:Relative>
+                <al:State>Playing</al:State>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="ResourceSubject">
+              <Name>trash</Name>
+            </Expression>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="DueTime" />
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:Timer">
+                <rx:DueTime>PT4S</rx:DueTime>
+                <rx:Period>PT0S</rx:Period>
+              </Combinator>
+            </Expression>
+          </Nodes>
+          <Edges>
+            <Edge From="0" To="1" Label="Source1" />
+            <Edge From="1" To="2" Label="Source1" />
+            <Edge From="3" To="4" Label="Source1" />
+          </Edges>
+        </Workflow>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="rx:Merge" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="rx:Merge" />
+      </Expression>
+    </Nodes>
+    <Edges>
+      <Edge From="0" To="1" Label="Source1" />
+      <Edge From="1" To="2" Label="Source1" />
+      <Edge From="3" To="4" Label="Source1" />
+      <Edge From="4" To="7" Label="Source1" />
+      <Edge From="5" To="6" Label="Source1" />
+      <Edge From="6" To="7" Label="Source2" />
+      <Edge From="7" To="8" Label="Source1" />
+    </Edges>
+  </Workflow>
+</WorkflowBuilder>
