@@ -1,6 +1,6 @@
 #version 400
 
-#Adapted from https://www.shadertoy.com/view/fdjfDc
+//Adapted from https://www.shadertoy.com/view/fdjfDc
 
 uniform vec2 m = vec2(0,0); //Mouse position
 uniform int isMouseDown = 0; //is mlb down
