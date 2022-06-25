@@ -5,9 +5,10 @@
                  xmlns:osc="clr-namespace:Bonsai.Osc;assembly=Bonsai.Osc"
                  xmlns:rx="clr-namespace:Bonsai.Reactive;assembly=Bonsai.Core"
                  xmlns:scr="clr-namespace:Bonsai.Scripting;assembly=Bonsai.Scripting"
+                 xmlns:p1="clr-namespace:Bonsai.Numerics.Distributions;assembly=Bonsai.Numerics"
                  xmlns:cv="clr-namespace:Bonsai.Vision;assembly=Bonsai.Vision"
-                 xmlns:p1="clr-namespace:;assembly=Extensions"
-                 xmlns:p2="clr-namespace:Bonsai.Numerics.Distributions;assembly=Bonsai.Numerics"
+                 xmlns:p2="clr-namespace:;assembly=Extensions"
+                 xmlns:drw="clr-namespace:Bonsai.Vision.Drawing;assembly=Bonsai.Vision"
                  xmlns="https://bonsai-rx.org/2018/workflow">
   <Workflow>
     <Nodes>
@@ -38,120 +39,35 @@
           <wie:SuppressRepetitions>false</wie:SuppressRepetitions>
         </Combinator>
       </Expression>
-      <Expression xsi:type="SelectMany">
-        <Name>GenerateROI</Name>
-        <Workflow>
-          <Nodes>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="IntProperty">
-                <Value>3</Value>
-              </Combinator>
-            </Expression>
-            <Expression xsi:type="ReplaySubject">
-              <Name>circleresolution</Name>
-              <BufferSize xsi:nil="true" />
-            </Expression>
-            <Expression xsi:type="SubscribeSubject">
-              <Name>circleresolution</Name>
-            </Expression>
-            <Expression xsi:type="PropertyMapping">
-              <PropertyMappings>
-                <Property Name="Value" />
-              </PropertyMappings>
-            </Expression>
-            <Expression xsi:type="SubscribeSubject">
-              <Name>circleresolution</Name>
-            </Expression>
-            <Expression xsi:type="Add">
-              <Operand xsi:type="IntProperty">
-                <Value>1</Value>
-              </Operand>
-            </Expression>
-            <Expression xsi:type="PropertyMapping">
-              <PropertyMappings>
-                <Property Name="Count" />
-              </PropertyMappings>
-            </Expression>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="rx:Range">
-                <rx:Start>0</rx:Start>
-                <rx:Count>4</rx:Count>
-              </Combinator>
-            </Expression>
-            <Expression xsi:type="scr:ExpressionTransform">
-              <scr:Expression>Convert.ToDouble(it)</scr:Expression>
-            </Expression>
-            <Expression xsi:type="Divide">
-              <Operand xsi:type="IntProperty">
-                <Value>3</Value>
-              </Operand>
-            </Expression>
-            <Expression xsi:type="scr:ExpressionTransform">
-              <scr:Expression>it * Math.Pi*2</scr:Expression>
-            </Expression>
-            <Expression xsi:type="scr:ExpressionTransform">
-              <scr:Expression>Math.Cos(it)* 200</scr:Expression>
-            </Expression>
-            <Expression xsi:type="Add">
-              <Operand xsi:type="DoubleProperty">
-                <Value>240</Value>
-              </Operand>
-            </Expression>
-            <Expression xsi:type="scr:ExpressionTransform">
-              <scr:Expression>Math.Sin(it)* 200</scr:Expression>
-            </Expression>
-            <Expression xsi:type="Add">
-              <Operand xsi:type="DoubleProperty">
-                <Value>240</Value>
-              </Operand>
-            </Expression>
-            <Expression xsi:type="Combinator">
-              <Combinator xsi:type="rx:Zip" />
-            </Expression>
-            <Expression xsi:type="WorkflowOutput" />
-          </Nodes>
-          <Edges>
-            <Edge From="0" To="1" Label="Source1" />
-            <Edge From="2" To="3" Label="Source1" />
-            <Edge From="3" To="9" Label="Source2" />
-            <Edge From="4" To="5" Label="Source1" />
-            <Edge From="5" To="6" Label="Source1" />
-            <Edge From="6" To="7" Label="Source1" />
-            <Edge From="7" To="8" Label="Source1" />
-            <Edge From="8" To="9" Label="Source1" />
-            <Edge From="9" To="10" Label="Source1" />
-            <Edge From="10" To="11" Label="Source1" />
-            <Edge From="10" To="13" Label="Source1" />
-            <Edge From="11" To="12" Label="Source1" />
-            <Edge From="12" To="15" Label="Source1" />
-            <Edge From="13" To="14" Label="Source1" />
-            <Edge From="14" To="15" Label="Source2" />
-            <Edge From="15" To="16" Label="Source1" />
-          </Edges>
-        </Workflow>
-      </Expression>
       <Expression xsi:type="Disable">
         <Builder xsi:type="SelectMany">
           <Name>GenerateROI</Name>
           <Workflow>
             <Nodes>
               <Expression xsi:type="Combinator">
-                <Combinator xsi:type="p2:CreateContinuousUniform">
-                  <p2:Lower>0</p2:Lower>
-                  <p2:Upper>100</p2:Upper>
+                <Combinator xsi:type="IntProperty">
+                  <Value>4</Value>
                 </Combinator>
               </Expression>
-              <Expression xsi:type="Combinator">
-                <Combinator xsi:type="p2:Sample" />
-              </Expression>
-              <Expression xsi:type="Combinator">
-                <Combinator xsi:type="p2:Sample" />
-              </Expression>
-              <Expression xsi:type="Combinator">
-                <Combinator xsi:type="rx:Zip" />
+              <Expression xsi:type="ReplaySubject">
+                <Name>circleresolution</Name>
+                <BufferSize xsi:nil="true" />
               </Expression>
               <Expression xsi:type="SubscribeSubject">
-                <Name>start_array</Name>
+                <Name>circleresolution</Name>
+              </Expression>
+              <Expression xsi:type="PropertyMapping">
+                <PropertyMappings>
+                  <Property Name="Value" />
+                </PropertyMappings>
+              </Expression>
+              <Expression xsi:type="SubscribeSubject">
+                <Name>circleresolution</Name>
+              </Expression>
+              <Expression xsi:type="Add">
+                <Operand xsi:type="IntProperty">
+                  <Value>1</Value>
+                </Operand>
               </Expression>
               <Expression xsi:type="PropertyMapping">
                 <PropertyMappings>
@@ -159,24 +75,109 @@
                 </PropertyMappings>
               </Expression>
               <Expression xsi:type="Combinator">
-                <Combinator xsi:type="rx:RepeatCount">
-                  <rx:Count>10</rx:Count>
+                <Combinator xsi:type="rx:Range">
+                  <rx:Start>0</rx:Start>
+                  <rx:Count>5</rx:Count>
                 </Combinator>
+              </Expression>
+              <Expression xsi:type="scr:ExpressionTransform">
+                <scr:Expression>Convert.ToDouble(it)</scr:Expression>
+              </Expression>
+              <Expression xsi:type="Divide">
+                <Operand xsi:type="IntProperty">
+                  <Value>4</Value>
+                </Operand>
+              </Expression>
+              <Expression xsi:type="scr:ExpressionTransform">
+                <scr:Expression>it * Math.Pi*2</scr:Expression>
+              </Expression>
+              <Expression xsi:type="scr:ExpressionTransform">
+                <scr:Expression>Math.Cos(it)* 200</scr:Expression>
+              </Expression>
+              <Expression xsi:type="Add">
+                <Operand xsi:type="DoubleProperty">
+                  <Value>240</Value>
+                </Operand>
+              </Expression>
+              <Expression xsi:type="scr:ExpressionTransform">
+                <scr:Expression>Math.Sin(it)* 200</scr:Expression>
+              </Expression>
+              <Expression xsi:type="Add">
+                <Operand xsi:type="DoubleProperty">
+                  <Value>240</Value>
+                </Operand>
+              </Expression>
+              <Expression xsi:type="Combinator">
+                <Combinator xsi:type="rx:Zip" />
               </Expression>
               <Expression xsi:type="WorkflowOutput" />
             </Nodes>
             <Edges>
               <Edge From="0" To="1" Label="Source1" />
-              <Edge From="0" To="2" Label="Source1" />
-              <Edge From="1" To="3" Label="Source1" />
-              <Edge From="2" To="3" Label="Source2" />
-              <Edge From="3" To="6" Label="Source1" />
+              <Edge From="2" To="3" Label="Source1" />
+              <Edge From="3" To="9" Label="Source2" />
               <Edge From="4" To="5" Label="Source1" />
-              <Edge From="5" To="6" Label="Source2" />
+              <Edge From="5" To="6" Label="Source1" />
               <Edge From="6" To="7" Label="Source1" />
+              <Edge From="7" To="8" Label="Source1" />
+              <Edge From="8" To="9" Label="Source1" />
+              <Edge From="9" To="10" Label="Source1" />
+              <Edge From="10" To="11" Label="Source1" />
+              <Edge From="10" To="13" Label="Source1" />
+              <Edge From="11" To="12" Label="Source1" />
+              <Edge From="12" To="15" Label="Source1" />
+              <Edge From="13" To="14" Label="Source1" />
+              <Edge From="14" To="15" Label="Source2" />
+              <Edge From="15" To="16" Label="Source1" />
             </Edges>
           </Workflow>
         </Builder>
+      </Expression>
+      <Expression xsi:type="SelectMany">
+        <Name>GenerateROI</Name>
+        <Workflow>
+          <Nodes>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="p1:CreateContinuousUniform">
+                <p1:Lower>0</p1:Lower>
+                <p1:Upper>100</p1:Upper>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="p1:Sample" />
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="p1:Sample" />
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:Zip" />
+            </Expression>
+            <Expression xsi:type="SubscribeSubject">
+              <Name>start_array</Name>
+            </Expression>
+            <Expression xsi:type="PropertyMapping">
+              <PropertyMappings>
+                <Property Name="Count" />
+              </PropertyMappings>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:RepeatCount">
+                <rx:Count>10</rx:Count>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="WorkflowOutput" />
+          </Nodes>
+          <Edges>
+            <Edge From="0" To="1" Label="Source1" />
+            <Edge From="0" To="2" Label="Source1" />
+            <Edge From="1" To="3" Label="Source1" />
+            <Edge From="2" To="3" Label="Source2" />
+            <Edge From="3" To="6" Label="Source1" />
+            <Edge From="4" To="5" Label="Source1" />
+            <Edge From="5" To="6" Label="Source2" />
+            <Edge From="6" To="7" Label="Source1" />
+          </Edges>
+        </Workflow>
       </Expression>
       <Expression xsi:type="osc:Format">
         <osc:Address>/point</osc:Address>
@@ -307,7 +308,7 @@
               <Selector>Item1</Selector>
             </Expression>
             <Expression xsi:type="Combinator">
-              <Combinator xsi:type="p1:CollectionToArray" />
+              <Combinator xsi:type="p2:CollectionToArray" />
             </Expression>
             <Expression xsi:type="Combinator">
               <Combinator xsi:type="rx:Zip" />
@@ -332,12 +333,16 @@
                       <cv:Y>240</cv:Y>
                     </cv:Point>
                     <cv:Point>
-                      <cv:X>140</cv:X>
-                      <cv:Y>413</cv:Y>
+                      <cv:X>240</cv:X>
+                      <cv:Y>440</cv:Y>
                     </cv:Point>
                     <cv:Point>
-                      <cv:X>139</cv:X>
-                      <cv:Y>66</cv:Y>
+                      <cv:X>40</cv:X>
+                      <cv:Y>240</cv:Y>
+                    </cv:Point>
+                    <cv:Point>
+                      <cv:X>239</cv:X>
+                      <cv:Y>40</cv:Y>
                     </cv:Point>
                     <cv:Point>
                       <cv:X>440</cv:X>
@@ -358,6 +363,84 @@
             <Expression xsi:type="Combinator">
               <Combinator xsi:type="cv:ContainsPoint" />
             </Expression>
+            <Expression xsi:type="Disable">
+              <Builder xsi:type="Combinator">
+                <Combinator xsi:type="drw:CreateCanvas">
+                  <drw:Size>
+                    <drw:Width>1440</drw:Width>
+                    <drw:Height>1080</drw:Height>
+                  </drw:Size>
+                  <drw:Depth>U8</drw:Depth>
+                  <drw:Channels>3</drw:Channels>
+                  <drw:Color>
+                    <drw:Val0>0</drw:Val0>
+                    <drw:Val1>0</drw:Val1>
+                    <drw:Val2>0</drw:Val2>
+                    <drw:Val3>0</drw:Val3>
+                  </drw:Color>
+                </Combinator>
+              </Builder>
+            </Expression>
+            <Expression xsi:type="Disable">
+              <Builder xsi:type="Combinator">
+                <Combinator xsi:type="cv:CameraCapture">
+                  <cv:Index>0</cv:Index>
+                  <cv:CaptureProperties />
+                </Combinator>
+              </Builder>
+            </Expression>
+            <Expression xsi:type="Disable">
+              <Builder xsi:type="Combinator">
+                <Combinator xsi:type="cv:FindContours">
+                  <cv:Mode>External</cv:Mode>
+                  <cv:Method>ChainApproxNone</cv:Method>
+                  <cv:Offset>
+                    <cv:X>0</cv:X>
+                    <cv:Y>0</cv:Y>
+                  </cv:Offset>
+                  <cv:MinArea xsi:nil="true" />
+                  <cv:MaxArea xsi:nil="true" />
+                </Combinator>
+              </Builder>
+            </Expression>
+            <Expression xsi:type="Disable">
+              <Builder xsi:type="MemberSelector">
+                <Selector>FirstContour</Selector>
+              </Builder>
+            </Expression>
+            <Expression xsi:type="Disable">
+              <Builder xsi:type="PropertyMapping">
+                <PropertyMappings>
+                  <Property Name="Contour" />
+                </PropertyMappings>
+              </Builder>
+            </Expression>
+            <Expression xsi:type="Disable">
+              <Builder xsi:type="Combinator">
+                <Combinator xsi:type="drw:DrawContours">
+                  <drw:ExternalColor>
+                    <drw:Val0>255</drw:Val0>
+                    <drw:Val1>255</drw:Val1>
+                    <drw:Val2>255</drw:Val2>
+                    <drw:Val3>255</drw:Val3>
+                  </drw:ExternalColor>
+                  <drw:HoleColor>
+                    <drw:Val0>255</drw:Val0>
+                    <drw:Val1>255</drw:Val1>
+                    <drw:Val2>255</drw:Val2>
+                    <drw:Val3>255</drw:Val3>
+                  </drw:HoleColor>
+                  <drw:MaxLevel>0</drw:MaxLevel>
+                  <drw:Thickness>-1</drw:Thickness>
+                  <drw:LineType>Connected8</drw:LineType>
+                </Combinator>
+              </Builder>
+            </Expression>
+            <Expression xsi:type="Disable">
+              <Builder xsi:type="Combinator">
+                <Combinator xsi:type="drw:DrawCanvas" />
+              </Builder>
+            </Expression>
           </Nodes>
           <Edges>
             <Edge From="0" To="7" Label="Source2" />
@@ -374,6 +457,12 @@
             <Edge From="9" To="11" Label="Source1" />
             <Edge From="10" To="11" Label="Source2" />
             <Edge From="11" To="12" Label="Source1" />
+            <Edge From="14" To="19" Label="Source1" />
+            <Edge From="15" To="16" Label="Source1" />
+            <Edge From="16" To="17" Label="Source1" />
+            <Edge From="17" To="18" Label="Source1" />
+            <Edge From="18" To="19" Label="Source2" />
+            <Edge From="19" To="20" Label="Source1" />
           </Edges>
         </Workflow>
       </Expression>
