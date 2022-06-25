@@ -1,0 +1,737 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WorkflowBuilder Version="2.6.3"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:cv="clr-namespace:Bonsai.Vision;assembly=Bonsai.Vision"
+                 xmlns:gl="clr-namespace:Bonsai.Shaders;assembly=Bonsai.Shaders"
+                 xmlns:res="clr-namespace:Bonsai.Resources;assembly=Bonsai.System"
+                 xmlns:rx="clr-namespace:Bonsai.Reactive;assembly=Bonsai.Core"
+                 xmlns:dsp="clr-namespace:Bonsai.Dsp;assembly=Bonsai.Dsp"
+                 xmlns:vid="clr-namespace:Bonsai.Video;assembly=Bonsai.Video"
+                 xmlns="https://bonsai-rx.org/2018/workflow">
+  <Workflow>
+    <Nodes>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="cv:CameraCapture">
+          <cv:Index>0</cv:Index>
+          <cv:CaptureProperties />
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="cv:Grayscale" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="cv:Flip">
+          <cv:Mode>Vertical</cv:Mode>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:StoreImage">
+          <gl:InternalFormat>Rgba</gl:InternalFormat>
+          <gl:WrapS>Repeat</gl:WrapS>
+          <gl:WrapT>Repeat</gl:WrapT>
+          <gl:MinFilter>Linear</gl:MinFilter>
+          <gl:MagFilter>Linear</gl:MagFilter>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:BindTexture">
+          <gl:TextureSlot>Texture0</gl:TextureSlot>
+          <gl:ShaderName>linestrip</gl:ShaderName>
+          <gl:TextureName />
+          <gl:TextureTarget>Texture2D</gl:TextureTarget>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Size</Selector>
+      </Expression>
+      <Expression xsi:type="MemberSelector">
+        <Selector>Width,Height</Selector>
+      </Expression>
+      <Expression xsi:type="ReplaySubject">
+        <Name>imSize</Name>
+        <BufferSize xsi:nil="true" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:CreateWindow">
+          <gl:Width>640</gl:Width>
+          <gl:Height>480</gl:Height>
+          <gl:VSync>On</gl:VSync>
+          <gl:SwapSync>false</gl:SwapSync>
+          <gl:ClearColor>OrangeRed</gl:ClearColor>
+          <gl:ClearMask>DepthBufferBit ColorBufferBit</gl:ClearMask>
+          <gl:CursorVisible>true</gl:CursorVisible>
+          <gl:Location xsi:nil="true" />
+          <gl:WindowBorder>Resizable</gl:WindowBorder>
+          <gl:WindowState>Normal</gl:WindowState>
+          <gl:DisplayDevice>Primary</gl:DisplayDevice>
+          <gl:TargetRenderFrequency>60</gl:TargetRenderFrequency>
+          <gl:TargetUpdateFrequency xsi:nil="true" />
+          <gl:RenderState />
+          <gl:GraphicsMode>
+            <gl:ColorFormat>
+              <gl:Red>8</gl:Red>
+              <gl:Green>8</gl:Green>
+              <gl:Blue>8</gl:Blue>
+              <gl:Alpha>8</gl:Alpha>
+            </gl:ColorFormat>
+            <gl:Depth>16</gl:Depth>
+            <gl:Stencil>0</gl:Stencil>
+            <gl:Samples>0</gl:Samples>
+            <gl:AccumulatorFormat>
+              <gl:Red>0</gl:Red>
+              <gl:Green>0</gl:Green>
+              <gl:Blue>0</gl:Blue>
+              <gl:Alpha>0</gl:Alpha>
+            </gl:AccumulatorFormat>
+            <gl:Buffers>2</gl:Buffers>
+            <gl:Stereo>false</gl:Stereo>
+          </gl:GraphicsMode>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="GroupWorkflow">
+        <Name>BonVisionResources</Name>
+        <Description>Loads mesh and shader resources for rendering primitive stimuli.</Description>
+        <Workflow>
+          <Nodes>
+            <Expression xsi:type="WorkflowInput">
+              <Name>Source1</Name>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="gl:UpdateRenderState">
+                <gl:RenderState>
+                  <gl:StateConfiguration xsi:type="gl:EnableState">
+                    <gl:Capability>Blend</gl:Capability>
+                  </gl:StateConfiguration>
+                  <gl:StateConfiguration xsi:type="gl:EnableState">
+                    <gl:Capability>DepthTest</gl:Capability>
+                  </gl:StateConfiguration>
+                  <gl:StateConfiguration xsi:type="gl:BlendFunctionState">
+                    <gl:SourceFactor>SrcAlpha</gl:SourceFactor>
+                    <gl:DestinationFactor>OneMinusSrcAlpha</gl:DestinationFactor>
+                  </gl:StateConfiguration>
+                  <gl:StateConfiguration xsi:type="gl:DepthFunctionState">
+                    <gl:Function>Lequal</gl:Function>
+                  </gl:StateConfiguration>
+                </gl:RenderState>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="NestedWorkflow">
+              <Name>InternalResources</Name>
+              <Workflow>
+                <Nodes>
+                  <Expression xsi:type="WorkflowInput">
+                    <Name>Source1</Name>
+                  </Expression>
+                  <Expression xsi:type="Combinator">
+                    <Combinator xsi:type="gl:MeshResources">
+                      <gl:Meshes>
+                        <gl:MeshConfiguration xsi:type="gl:TexturedModel">
+                          <gl:Name>Quad</gl:Name>
+                          <gl:FileName>BonVision:Models.Quad.obj</gl:FileName>
+                        </gl:MeshConfiguration>
+                        <gl:MeshConfiguration xsi:type="gl:TexturedQuad">
+                          <gl:Name>ViewportQuad</gl:Name>
+                          <gl:QuadEffects>None</gl:QuadEffects>
+                        </gl:MeshConfiguration>
+                        <gl:MeshConfiguration>
+                          <gl:Name>MeshMap</gl:Name>
+                        </gl:MeshConfiguration>
+                        <gl:MeshConfiguration>
+                          <gl:Name>SphereMap</gl:Name>
+                        </gl:MeshConfiguration>
+                      </gl:Meshes>
+                    </Combinator>
+                  </Expression>
+                  <Expression xsi:type="WorkflowOutput" />
+                </Nodes>
+                <Edges>
+                  <Edge From="0" To="1" Label="Source1" />
+                  <Edge From="1" To="2" Label="Source1" />
+                </Edges>
+              </Workflow>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="gl:MeshResources">
+                <gl:Meshes>
+                  <gl:MeshConfiguration xsi:type="gl:TexturedModel">
+                    <gl:Name>Plane</gl:Name>
+                    <gl:FileName>BonVision:Models.Plane.obj</gl:FileName>
+                  </gl:MeshConfiguration>
+                </gl:Meshes>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="gl:ShaderResources">
+                <gl:Shaders>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>Checkerboard</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings />
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.Quad.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.Checkerboard.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>Image</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings>
+                      <gl:BufferBinding xsi:type="gl:TextureBinding">
+                        <gl:Name>tex</gl:Name>
+                        <gl:TextureSlot>Texture0</gl:TextureSlot>
+                        <gl:TextureTarget>Texture2D</gl:TextureTarget>
+                      </gl:BufferBinding>
+                    </gl:BufferBindings>
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.Quad.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.Image.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>Color</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings />
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.Quad.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.Color.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>Gratings</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings />
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.Gratings.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.Gratings.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>Circle</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings />
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.Quad.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.Circle.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>CircleArray</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings />
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.QuadArray.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.Circle.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>Model</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings />
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.Model.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.Model.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>ModelArray</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings />
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.ModelArray.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.Model.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>TexturedModel</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings>
+                      <gl:BufferBinding xsi:type="gl:TextureBinding">
+                        <gl:Name>textureDiffuse</gl:Name>
+                        <gl:TextureSlot>Texture0</gl:TextureSlot>
+                        <gl:TextureTarget>Texture2D</gl:TextureTarget>
+                      </gl:BufferBinding>
+                    </gl:BufferBindings>
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.TexturedModel.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.TexturedModel.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>TexturedModelArray</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings>
+                      <gl:BufferBinding xsi:type="gl:TextureBinding">
+                        <gl:Name>textureDiffuse</gl:Name>
+                        <gl:TextureSlot>Texture0</gl:TextureSlot>
+                        <gl:TextureTarget>Texture2D</gl:TextureTarget>
+                      </gl:BufferBinding>
+                    </gl:BufferBindings>
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.TexturedModelArray.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.TexturedModel.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>MeshMap</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings />
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.MeshMap.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.MeshMap.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>PerspectiveMap</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings>
+                      <gl:BufferBinding xsi:type="gl:TextureBinding">
+                        <gl:Name>tex</gl:Name>
+                        <gl:TextureSlot>Texture0</gl:TextureSlot>
+                        <gl:TextureTarget>Texture2D</gl:TextureTarget>
+                      </gl:BufferBinding>
+                    </gl:BufferBindings>
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.PerspectiveMap.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.PerspectiveMap.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>SphereMap</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings>
+                      <gl:BufferBinding xsi:type="gl:TextureBinding">
+                        <gl:Name>tex</gl:Name>
+                        <gl:TextureSlot>Texture0</gl:TextureSlot>
+                        <gl:TextureTarget>TextureCubeMap</gl:TextureTarget>
+                      </gl:BufferBinding>
+                    </gl:BufferBindings>
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.SphereMap.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.SphereMap.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>ViewMap</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings>
+                      <gl:BufferBinding xsi:type="gl:TextureBinding">
+                        <gl:Name>tex</gl:Name>
+                        <gl:TextureSlot>Texture0</gl:TextureSlot>
+                        <gl:TextureTarget>TextureCubeMap</gl:TextureTarget>
+                      </gl:BufferBinding>
+                      <gl:BufferBinding xsi:type="gl:TextureBinding">
+                        <gl:Name>viewMap</gl:Name>
+                        <gl:TextureSlot>Texture1</gl:TextureSlot>
+                        <gl:TextureTarget>Texture2D</gl:TextureTarget>
+                      </gl:BufferBinding>
+                    </gl:BufferBindings>
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.Quad.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.ViewMap.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                  <gl:ShaderConfiguration xsi:type="gl:Material">
+                    <gl:Name>Gamma</gl:Name>
+                    <gl:RenderState />
+                    <gl:ShaderUniforms />
+                    <gl:BufferBindings>
+                      <gl:BufferBinding xsi:type="gl:TextureBinding">
+                        <gl:Name>tex</gl:Name>
+                        <gl:TextureSlot>Texture0</gl:TextureSlot>
+                        <gl:TextureTarget>Texture2D</gl:TextureTarget>
+                      </gl:BufferBinding>
+                      <gl:BufferBinding xsi:type="gl:TextureBinding">
+                        <gl:Name>lut</gl:Name>
+                        <gl:TextureSlot>Texture1</gl:TextureSlot>
+                        <gl:TextureTarget>Texture2D</gl:TextureTarget>
+                      </gl:BufferBinding>
+                    </gl:BufferBindings>
+                    <gl:FramebufferAttachments />
+                    <gl:VertexShader>BonVision:Shaders.Quad.vert</gl:VertexShader>
+                    <gl:FragmentShader>BonVision:Shaders.Gamma.frag</gl:FragmentShader>
+                  </gl:ShaderConfiguration>
+                </gl:Shaders>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="WorkflowOutput" />
+          </Nodes>
+          <Edges>
+            <Edge From="0" To="1" Label="Source1" />
+            <Edge From="1" To="2" Label="Source1" />
+            <Edge From="2" To="3" Label="Source1" />
+            <Edge From="3" To="4" Label="Source1" />
+            <Edge From="4" To="5" Label="Source1" />
+          </Edges>
+        </Workflow>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:MeshResources">
+          <gl:Meshes>
+            <gl:MeshConfiguration>
+              <gl:Name>Line</gl:Name>
+            </gl:MeshConfiguration>
+          </gl:Meshes>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:ShaderResources">
+          <gl:Shaders>
+            <gl:ShaderConfiguration xsi:type="gl:Material">
+              <gl:Name>linestrip</gl:Name>
+              <gl:RenderState />
+              <gl:ShaderUniforms />
+              <gl:BufferBindings>
+                <gl:BufferBinding xsi:type="gl:TextureBinding">
+                  <gl:Name>tex</gl:Name>
+                  <gl:TextureSlot>Texture0</gl:TextureSlot>
+                  <gl:TextureTarget>Texture2D</gl:TextureTarget>
+                </gl:BufferBinding>
+              </gl:BufferBindings>
+              <gl:FramebufferAttachments />
+              <gl:VertexShader>shaders\gen.vert</gl:VertexShader>
+              <gl:GeometryShader>shaders\strip.geom</gl:GeometryShader>
+              <gl:FragmentShader>shaders\myfrag.frag</gl:FragmentShader>
+              <gl:MeshName />
+            </gl:ShaderConfiguration>
+          </gl:Shaders>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:TextureResources">
+          <gl:Textures />
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="res:LoadResources" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:RenderFrame" />
+      </Expression>
+      <Expression xsi:type="IncludeWorkflow" Path="BonVision:Environment.OrthographicView.bonsai">
+        <Left>-1</Left>
+        <Right>1</Right>
+        <Bottom>-1</Bottom>
+        <Top>1</Top>
+      </Expression>
+      <Expression xsi:type="PublishSubject">
+        <Name>draw</Name>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="IntProperty">
+          <Value>5</Value>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:SampleOnRenderFrame" />
+      </Expression>
+      <Expression xsi:type="PropertyMapping">
+        <PropertyMappings>
+          <Property Name="DownSample" />
+        </PropertyMappings>
+      </Expression>
+      <Expression xsi:type="SelectMany">
+        <Name>GeneratePoints</Name>
+        <Workflow>
+          <Nodes>
+            <Expression xsi:type="ExternalizedMapping">
+              <Property Name="Value" DisplayName="DownSample" />
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="IntProperty">
+                <Value>5</Value>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="ReplaySubject">
+              <Name>DownSample</Name>
+              <BufferSize xsi:nil="true" />
+            </Expression>
+            <Expression xsi:type="SubscribeSubject">
+              <Name>imSize</Name>
+            </Expression>
+            <Expression xsi:type="MemberSelector">
+              <Selector>Item1</Selector>
+            </Expression>
+            <Expression xsi:type="PropertyMapping">
+              <PropertyMappings>
+                <Property Name="Count" />
+              </PropertyMappings>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:Range">
+                <rx:Start>0</rx:Start>
+                <rx:Count>640</rx:Count>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="SubscribeSubject">
+              <Name>imSize</Name>
+            </Expression>
+            <Expression xsi:type="MemberSelector">
+              <Selector>Item1</Selector>
+            </Expression>
+            <Expression xsi:type="PropertyMapping">
+              <PropertyMappings>
+                <Property Name="Max" />
+              </PropertyMappings>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="dsp:Rescale">
+                <dsp:Min>0</dsp:Min>
+                <dsp:Max>640</dsp:Max>
+                <dsp:RangeMin>-1</dsp:RangeMin>
+                <dsp:RangeMax>1</dsp:RangeMax>
+                <dsp:RescaleType>Linear</dsp:RescaleType>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="SubscribeSubject">
+              <Name>DownSample</Name>
+            </Expression>
+            <Expression xsi:type="PropertyMapping">
+              <PropertyMappings>
+                <Property Name="Step" />
+              </PropertyMappings>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:Slice">
+                <rx:Start>0</rx:Start>
+                <rx:Step>5</rx:Step>
+                <rx:Stop xsi:nil="true" />
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="SubscribeSubject">
+              <Name>DownSample</Name>
+            </Expression>
+            <Expression xsi:type="PropertyMapping">
+              <PropertyMappings>
+                <Property Name="Step" />
+              </PropertyMappings>
+            </Expression>
+            <Expression xsi:type="SelectMany">
+              <Workflow>
+                <Nodes>
+                  <Expression xsi:type="WorkflowInput">
+                    <Name>Source1</Name>
+                  </Expression>
+                  <Expression xsi:type="SubscribeSubject">
+                    <Name>imSize</Name>
+                  </Expression>
+                  <Expression xsi:type="MemberSelector">
+                    <Selector>Item2</Selector>
+                  </Expression>
+                  <Expression xsi:type="PropertyMapping">
+                    <PropertyMappings>
+                      <Property Name="Count" />
+                    </PropertyMappings>
+                  </Expression>
+                  <Expression xsi:type="Combinator">
+                    <Combinator xsi:type="rx:Range">
+                      <rx:Start>0</rx:Start>
+                      <rx:Count>480</rx:Count>
+                    </Combinator>
+                  </Expression>
+                  <Expression xsi:type="SubscribeSubject">
+                    <Name>imSize</Name>
+                  </Expression>
+                  <Expression xsi:type="MemberSelector">
+                    <Selector>Item2</Selector>
+                  </Expression>
+                  <Expression xsi:type="PropertyMapping">
+                    <PropertyMappings>
+                      <Property Name="Max" />
+                    </PropertyMappings>
+                  </Expression>
+                  <Expression xsi:type="Combinator">
+                    <Combinator xsi:type="dsp:Rescale">
+                      <dsp:Min>0</dsp:Min>
+                      <dsp:Max>480</dsp:Max>
+                      <dsp:RangeMin>-1</dsp:RangeMin>
+                      <dsp:RangeMax>1</dsp:RangeMax>
+                      <dsp:RescaleType>Linear</dsp:RescaleType>
+                    </Combinator>
+                  </Expression>
+                  <Expression xsi:type="ExternalizedMapping">
+                    <Property Name="Step" />
+                  </Expression>
+                  <Expression xsi:type="Combinator">
+                    <Combinator xsi:type="rx:Slice">
+                      <rx:Start>0</rx:Start>
+                      <rx:Step>5</rx:Step>
+                      <rx:Stop xsi:nil="true" />
+                    </Combinator>
+                  </Expression>
+                  <Expression xsi:type="Combinator">
+                    <Combinator xsi:type="rx:WithLatestFrom" />
+                  </Expression>
+                  <Expression xsi:type="WorkflowOutput" />
+                </Nodes>
+                <Edges>
+                  <Edge From="0" To="11" Label="Source2" />
+                  <Edge From="1" To="2" Label="Source1" />
+                  <Edge From="2" To="3" Label="Source1" />
+                  <Edge From="3" To="4" Label="Source1" />
+                  <Edge From="4" To="8" Label="Source1" />
+                  <Edge From="5" To="6" Label="Source1" />
+                  <Edge From="6" To="7" Label="Source1" />
+                  <Edge From="7" To="8" Label="Source2" />
+                  <Edge From="8" To="10" Label="Source1" />
+                  <Edge From="9" To="10" Label="Source2" />
+                  <Edge From="10" To="11" Label="Source1" />
+                  <Edge From="11" To="12" Label="Source1" />
+                </Edges>
+              </Workflow>
+            </Expression>
+            <Expression xsi:type="InputMapping">
+              <PropertyMappings>
+                <Property Name="X" Selector="Item1" />
+                <Property Name="Y" Selector="Item2" />
+              </PropertyMappings>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="gl:CreateVector2">
+                <gl:X>0.9791667</gl:X>
+                <gl:Y>0.984375</gl:Y>
+              </Combinator>
+            </Expression>
+            <Expression xsi:type="Combinator">
+              <Combinator xsi:type="rx:ToArray" />
+            </Expression>
+            <Expression xsi:type="WorkflowOutput" />
+            <Expression xsi:type="MemberSelector">
+              <Selector>Length</Selector>
+            </Expression>
+          </Nodes>
+          <Edges>
+            <Edge From="0" To="1" Label="Source1" />
+            <Edge From="1" To="2" Label="Source1" />
+            <Edge From="3" To="4" Label="Source1" />
+            <Edge From="4" To="5" Label="Source1" />
+            <Edge From="5" To="6" Label="Source1" />
+            <Edge From="6" To="10" Label="Source1" />
+            <Edge From="7" To="8" Label="Source1" />
+            <Edge From="8" To="9" Label="Source1" />
+            <Edge From="9" To="10" Label="Source2" />
+            <Edge From="10" To="13" Label="Source1" />
+            <Edge From="11" To="12" Label="Source1" />
+            <Edge From="12" To="13" Label="Source2" />
+            <Edge From="13" To="16" Label="Source1" />
+            <Edge From="14" To="15" Label="Source1" />
+            <Edge From="15" To="16" Label="Source2" />
+            <Edge From="16" To="17" Label="Source1" />
+            <Edge From="17" To="18" Label="Source1" />
+            <Edge From="18" To="19" Label="Source1" />
+            <Edge From="19" To="20" Label="Source1" />
+            <Edge From="19" To="21" Label="Source1" />
+          </Edges>
+        </Workflow>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:UpdateVertexBuffer">
+          <gl:MeshName>Line</gl:MeshName>
+          <gl:DrawMode>Points</gl:DrawMode>
+          <gl:Usage>DynamicDraw</gl:Usage>
+          <gl:VertexAttributes>
+            <gl:VertexAttributeMapping>
+              <gl:Size>2</gl:Size>
+              <gl:Normalized>false</gl:Normalized>
+              <gl:Type>Float</gl:Type>
+            </gl:VertexAttributeMapping>
+          </gl:VertexAttributes>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="SubscribeSubject">
+        <Name>draw</Name>
+      </Expression>
+      <Expression xsi:type="ExternalizedMapping">
+        <Property Name="Value" />
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="FloatProperty">
+          <Value>0.02</Value>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:UpdateUniform">
+          <gl:UniformName>amplitude</gl:UniformName>
+          <gl:ShaderName>linestrip</gl:ShaderName>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:CreateVector4">
+          <gl:X>0</gl:X>
+          <gl:Y>0</gl:Y>
+          <gl:Z>1</gl:Z>
+          <gl:W>1</gl:W>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:UpdateUniform">
+          <gl:UniformName>color</gl:UniformName>
+          <gl:ShaderName>linestrip</gl:ShaderName>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="SubscribeSubject">
+        <Name>draw</Name>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="gl:DrawMesh">
+          <gl:ShaderName>linestrip</gl:ShaderName>
+          <gl:MeshName>Line</gl:MeshName>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="vid:ScreenCaptureStream">
+          <vid:HideCursor>false</vid:HideCursor>
+          <vid:CaptureRegion>
+            <vid:X>0</vid:X>
+            <vid:Y>0</vid:Y>
+            <vid:Width>0</vid:Width>
+            <vid:Height>0</vid:Height>
+          </vid:CaptureRegion>
+          <vid:FrameInterval>33</vid:FrameInterval>
+        </Combinator>
+      </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="cv:VideoWriter">
+          <cv:FileName>out.avi</cv:FileName>
+          <cv:Suffix>None</cv:Suffix>
+          <cv:Buffered>true</cv:Buffered>
+          <cv:Overwrite>true</cv:Overwrite>
+          <cv:FourCC>FMP4</cv:FourCC>
+          <cv:FrameRate>30</cv:FrameRate>
+          <cv:FrameSize>
+            <cv:Width>0</cv:Width>
+            <cv:Height>0</cv:Height>
+          </cv:FrameSize>
+          <cv:ResizeInterpolation>NearestNeighbor</cv:ResizeInterpolation>
+        </Combinator>
+      </Expression>
+    </Nodes>
+    <Edges>
+      <Edge From="0" To="1" Label="Source1" />
+      <Edge From="1" To="2" Label="Source1" />
+      <Edge From="1" To="5" Label="Source1" />
+      <Edge From="2" To="3" Label="Source1" />
+      <Edge From="3" To="4" Label="Source1" />
+      <Edge From="5" To="6" Label="Source1" />
+      <Edge From="6" To="7" Label="Source1" />
+      <Edge From="8" To="9" Label="Source1" />
+      <Edge From="9" To="10" Label="Source1" />
+      <Edge From="10" To="11" Label="Source1" />
+      <Edge From="11" To="12" Label="Source1" />
+      <Edge From="12" To="13" Label="Source1" />
+      <Edge From="14" To="15" Label="Source1" />
+      <Edge From="15" To="16" Label="Source1" />
+      <Edge From="17" To="18" Label="Source1" />
+      <Edge From="17" To="19" Label="Source1" />
+      <Edge From="18" To="20" Label="Source1" />
+      <Edge From="19" To="20" Label="Source2" />
+      <Edge From="20" To="21" Label="Source1" />
+      <Edge From="22" To="24" Label="Source1" />
+      <Edge From="23" To="24" Label="Source2" />
+      <Edge From="24" To="25" Label="Source1" />
+      <Edge From="25" To="26" Label="Source1" />
+      <Edge From="26" To="27" Label="Source1" />
+      <Edge From="28" To="29" Label="Source1" />
+      <Edge From="30" To="31" Label="Source1" />
+    </Edges>
+  </Workflow>
+</WorkflowBuilder>
