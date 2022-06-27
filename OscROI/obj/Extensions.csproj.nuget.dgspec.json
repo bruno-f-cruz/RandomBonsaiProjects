@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\neurogears\\Desktop\\Extensions.csproj": {}
+    "c:\\Users\\neurogears\\Documents\\git\\bonsai experiments\\OscROI\\Extensions.csproj": {}
   },
   "projects": {
-    "c:\\Users\\neurogears\\Desktop\\Extensions.csproj": {
+    "c:\\Users\\neurogears\\Documents\\git\\bonsai experiments\\OscROI\\Extensions.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\neurogears\\Desktop\\Extensions.csproj",
+        "projectUniqueName": "c:\\Users\\neurogears\\Documents\\git\\bonsai experiments\\OscROI\\Extensions.csproj",
         "projectName": "Extensions",
-        "projectPath": "c:\\Users\\neurogears\\Desktop\\Extensions.csproj",
+        "projectPath": "c:\\Users\\neurogears\\Documents\\git\\bonsai experiments\\OscROI\\Extensions.csproj",
         "packagesPath": "C:\\Users\\neurogears\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\neurogears\\Desktop\\obj\\",
+        "outputPath": "c:\\Users\\neurogears\\Documents\\git\\bonsai experiments\\OscROI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "c:\\Users\\neurogears\\Desktop\\NuGet.Config",
+          "c:\\Users\\neurogears\\Documents\\git\\bonsai experiments\\OscROI\\NuGet.Config",
           "C:\\Users\\neurogears\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
@@ -28,6 +28,7 @@
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Users\\neurogears\\AppData\\Local\\Bonsai\\Gallery": {},
+          "C:\\Users\\neurogears\\Downloads": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://www.myget.org/F/bonsai-boost/api/v3/index.json": {},
           "https://www.myget.org/F/bonsai-community/api/v3/index.json": {},
@@ -53,12 +54,16 @@
               "target": "Package",
               "version": "[2.6.3, )"
             },
+            "Bonsai.Vision": {
+              "target": "Package",
+              "version": "[2.6.1, )"
+            },
             "OpenCV.Net": {
               "target": "Package",
               "version": "[3.3.1, )"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

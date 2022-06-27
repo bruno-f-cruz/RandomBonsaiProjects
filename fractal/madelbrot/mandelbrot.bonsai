@@ -90,7 +90,7 @@
               <gl:WrapT>Repeat</gl:WrapT>
               <gl:MinFilter>Linear</gl:MinFilter>
               <gl:MagFilter>Linear</gl:MagFilter>
-              <gl:FileName>pal.png</gl:FileName>
+              <gl:FileName>C:\Users\neurogears\Documents\git\bruno-f-cruz\bonsai experiments\fractal\pal.png</gl:FileName>
               <gl:ColorType>Unchanged</gl:ColorType>
               <gl:FlipMode>Vertical</gl:FlipMode>
             </gl:TextureConfiguration>

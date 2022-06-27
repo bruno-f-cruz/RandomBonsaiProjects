@@ -1,14 +1,18 @@
 {
   "version": 2,
-  "dgSpecHash": "2p2eiik7Z47xi6w0cs1FqsMHnJXNLQbRG+9ezFhoEQHRqxg2CCfmfzbUEGn85e0ykvhd9UYBiKXXAPC36L3Hdw==",
+  "dgSpecHash": "vcI41qyZNb5IJMpkNgjUJuL/WMhUUbL6ABS+jxdshJNGSa3AJo+Elkt8/rwXjB+QxTC4EMBBv292L1/Pu6R9Zw==",
   "success": true,
-  "projectFilePath": "c:\\Users\\neurogears\\Desktop\\Extensions.csproj",
+  "projectFilePath": "c:\\Users\\neurogears\\Documents\\git\\bonsai experiments\\OscROI\\Extensions.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\neurogears\\.nuget\\packages\\bonsai.core\\2.6.3\\bonsai.core.2.6.3.nupkg.sha512",
+    "C:\\Users\\neurogears\\.nuget\\packages\\bonsai.dsp\\2.6.1\\bonsai.dsp.2.6.1.nupkg.sha512",
+    "C:\\Users\\neurogears\\.nuget\\packages\\bonsai.system\\2.6.0\\bonsai.system.2.6.0.nupkg.sha512",
+    "C:\\Users\\neurogears\\.nuget\\packages\\bonsai.vision\\2.6.1\\bonsai.vision.2.6.1.nupkg.sha512",
     "C:\\Users\\neurogears\\.nuget\\packages\\opencv.net\\3.3.1\\opencv.net.3.3.1.nupkg.sha512",
     "C:\\Users\\neurogears\\.nuget\\packages\\rx-core\\2.2.5\\rx-core.2.2.5.nupkg.sha512",
     "C:\\Users\\neurogears\\.nuget\\packages\\rx-interfaces\\2.2.5\\rx-interfaces.2.2.5.nupkg.sha512",
-    "C:\\Users\\neurogears\\.nuget\\packages\\rx-linq\\2.2.5\\rx-linq.2.2.5.nupkg.sha512"
+    "C:\\Users\\neurogears\\.nuget\\packages\\rx-linq\\2.2.5\\rx-linq.2.2.5.nupkg.sha512",
+    "C:\\Users\\neurogears\\.nuget\\packages\\rx-platformservices\\2.2.5\\rx-platformservices.2.2.5.nupkg.sha512"
   ],
   "logs": []
 }
